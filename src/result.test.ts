@@ -1,4 +1,4 @@
-import { Result, Success, Failure } from './result';
+import { Result, Success, Failure, ResultPromise } from './result';
 
 describe('Result Class', () => {
   describe('constructor', () => {
@@ -269,6 +269,122 @@ describe('Result Class', () => {
       result.onFailure(callback); // No type specified, should use default 'FAILURE'
 
       expect(callback).toHaveBeenCalledWith(error, result);
+    });
+  });
+
+  describe('ResultPromise class', () => {
+    describe('constructor', () => {
+      it('should create a ResultPromise from a Promise<Result>', async () => {
+        const promise = Promise.resolve(Success({ value: 'test' }));
+        const resultPromise = new ResultPromise(promise);
+
+        const result = await resultPromise.toResult();
+        expect(result.isSuccess()).toBe(true);
+        expect(result.getValue()).toEqual({ value: 'test' });
+      });
+    });
+
+    describe('then method', () => {
+      it('should implement the PromiseLike interface', async () => {
+        const promise = Promise.resolve(Success({ value: 'test' }));
+        const resultPromise = new ResultPromise(promise);
+
+        const result = await resultPromise;
+        expect(result.isSuccess()).toBe(true);
+        expect(result.getValue()).toEqual({ value: 'test' });
+      });
+    });
+
+    describe('and_then method', () => {
+      it('should chain operations on successful results', async () => {
+        const promise = Promise.resolve(Success({ value: 'test' }));
+        const resultPromise = new ResultPromise(promise);
+
+        const chainedPromise = resultPromise.and_then(async data => {
+          return Success({ newValue: data.value + ' modified' });
+        });
+
+        const result = await chainedPromise.toResult();
+        expect(result.isSuccess()).toBe(true);
+        expect(result.getValue()).toEqual({ newValue: 'test modified' });
+      });
+
+      it('should not execute callback for failed results', async () => {
+        const error = new Error('Test error');
+        const promise = Promise.resolve(Failure(error));
+        const resultPromise = new ResultPromise(promise);
+
+        const callback = jest.fn().mockResolvedValue(Success({ value: 'new' }));
+        const chainedPromise = resultPromise.and_then(callback);
+
+        const result = await chainedPromise.toResult();
+        expect(callback).not.toHaveBeenCalled();
+        expect(result.isFailure()).toBe(true);
+        expect(result.getError()).toBe(error);
+      });
+    });
+
+    describe('onSuccess method', () => {
+      it('should execute callback for successful results', async () => {
+        const promise = Promise.resolve(Success({ value: 'test' }));
+        const resultPromise = new ResultPromise(promise);
+
+        const callback = jest.fn();
+        resultPromise.onSuccess(callback);
+
+        await resultPromise.toResult();
+        expect(callback).toHaveBeenCalledWith({ value: 'test' }, expect.any(Result));
+      });
+
+      it('should allow chaining', async () => {
+        const promise = Promise.resolve(Success({ value: 'test' }));
+        const resultPromise = new ResultPromise(promise);
+
+        const callback1 = jest.fn();
+        const callback2 = jest.fn();
+
+        resultPromise.onSuccess(callback1).onSuccess(callback2);
+
+        await resultPromise.toResult();
+        expect(callback1).toHaveBeenCalled();
+        expect(callback2).toHaveBeenCalled();
+      });
+    });
+
+    describe('onFailure method', () => {
+      it('should execute callback for failed results with matching type', async () => {
+        const error = new Error('Test error');
+        const promise = Promise.resolve(Failure(error, 'CUSTOM_ERROR'));
+        const resultPromise = new ResultPromise(promise);
+
+        const callback = jest.fn();
+        resultPromise.onFailure(callback, 'CUSTOM_ERROR');
+
+        await resultPromise.toResult();
+        expect(callback).toHaveBeenCalledWith(error, expect.any(Result));
+      });
+
+      it('should not execute callback for successful results', async () => {
+        const promise = Promise.resolve(Success({ value: 'test' }));
+        const resultPromise = new ResultPromise(promise);
+
+        const callback = jest.fn();
+        resultPromise.onFailure(callback);
+
+        await resultPromise.toResult();
+        expect(callback).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('toResult method', () => {
+      it('should resolve to the Result', async () => {
+        const originalResult = Success({ value: 'test' });
+        const promise = Promise.resolve(originalResult);
+        const resultPromise = new ResultPromise(promise);
+
+        const result = await resultPromise.toResult();
+        expect(result).toBe(originalResult);
+      });
     });
   });
 });
