@@ -1,6 +1,6 @@
 {
-  "name": "@brunosps00/usecase.ts",
-  "version": "0.0.6",
+  "name": "usecase_ts",
+  "version": "0.0.1",
   "description": "Uma implementação do padrão Result para TypeScript",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
