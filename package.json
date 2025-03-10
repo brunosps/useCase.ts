@@ -1,6 +1,6 @@
 {
   "name": "usecase.ts",
-  "version": "0.0.3",
+  "version": "1.0.0",
   "description": "Uma implementação do padrão Result para TypeScript",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
