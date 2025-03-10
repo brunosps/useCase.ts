@@ -2,7 +2,7 @@
 
 Uma implementação robusta do padrão Result para TypeScript, projetada para gerenciar fluxos de erro de forma elegante e previsível.
 
-[![CI](https://github.com/brunosps00/usecase_ts/actions/workflows/ci.yml/badge.svg)](https://github.com/brunosps00/usecase_ts/actions/workflows/ci.yml)
+[![CI](https://github.com/brunosps/usecase_ts/actions/workflows/ci.yml/badge.svg)](https://github.com/brunosps/usecase_ts/actions/workflows/ci.yml)
 [![npm version](https://badge.fury.io/js/usecase_ts.svg)](https://badge.fury.io/js/usecase_ts)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
