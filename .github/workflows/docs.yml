@@ -1,28 +1,33 @@
-name: Documentation
+name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [main]
-  workflow_dispatch:
+    branches: [main]  # ou qualquer branch que você queira monitorar
+  workflow_dispatch:  # permite execução manual
+
+# Adicione esta seção de permissões
+permissions:
+  contents: write  # Crucial para permitir push para o branch gh-pages
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
-          node-version: '20.x'
-          
+          persist-credentials: true  # Importante para manter as credenciais
+
+      # Seus passos de build aqui, por exemplo:
       - name: Install dependencies
         run: npm ci
         
-      - name: Generate documentation
-        run: npm run docs
-        
+      - name: Build docs
+        run: npm run docs  # ou qualquer comando que gere sua documentação
+
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: docs
+          folder: docs  # A pasta que contém os arquivos a serem publicados
+          branch: gh-pages  # O branch onde será publicado
+          clean: true  # Remove arquivos antigos
