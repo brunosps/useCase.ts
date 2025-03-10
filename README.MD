@@ -1,21 +1,21 @@
-# UseCase.ts (Inspired by [u-case](https://github.com/serradura/u-case))
+# UseCase_ts (Inspired by [u-case](https://github.com/serradura/u-case))
 
 Uma implementação robusta do padrão Result para TypeScript, projetada para gerenciar fluxos de erro de forma elegante e previsível.
 
-[![CI](https://github.com/brunosps00/useCase.ts/actions/workflows/ci.yml/badge.svg)](https://github.com/brunosps00/useCase.ts/actions/workflows/ci.yml)
-[![npm version](https://badge.fury.io/js/useCase.ts.svg)](https://badge.fury.io/js/useCase.ts)
+[![CI](https://github.com/brunosps00/usecase_ts/actions/workflows/ci.yml/badge.svg)](https://github.com/brunosps00/usecase_ts/actions/workflows/ci.yml)
+[![npm version](https://badge.fury.io/js/usecase_ts.svg)](https://badge.fury.io/js/usecase_ts)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Instalação
 
 ```bash
-npm install useCase.ts
+npm install usecase_ts
 ```
 
 ## Uso Básico
 
 ```typescript
-import { Result, Success, Failure, UseCase } from 'useCase.ts';
+import { Result, Success, Failure, UseCase } from 'usecase_ts';
 
 // Exemplo de caso de uso
 class GetUserUseCase extends UseCase<{ id: string }, { name: string, email: string }> {
@@ -97,7 +97,7 @@ Classe abstrata para implementar casos de uso.
 
 ```typescript
 import { BaseProps, ListOfRecords } from '@core';
-import { Result, Success, UseCase } from 'useCase.ts';
+import { Result, Success, UseCase } from 'usecase_ts';
 import { Injectable } from '@nestjs/common';
 
 import { ItemEntity } from '../domain/entities/item.entity';
@@ -170,7 +170,7 @@ export class QueryItems extends UseCase<
 
 ```typescript
 import { Injectable } from '@nestjs/common';
-import { Result, Success, Failure, UseCase } from 'useCase.ts';
+import { Result, Success, Failure, UseCase } from 'usecase_ts';
 import { JwtService } from '@nestjs/jwt';
 import { UserRepository } from '../repositories/user.repository';
 import { PasswordService } from '../services/password.service';
@@ -288,7 +288,7 @@ async function authenticate(email: string, password: string) {
 ## Tratamento de Erros
 
 ```typescript
-import { Failure, Result, Success, UseCase } from 'useCase.ts';
+import { Failure, Result, Success, UseCase } from 'usecase_ts';
 
 class ProcessarDadosUseCase extends UseCase<string, number> {
   async execute(input?: string): Promise<Result<number>> {

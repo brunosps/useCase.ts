@@ -47,12 +47,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/brunosps/usecase.ts.git"
+    "url": "git+https://github.com/brunosps/usecase_ts.git"
   },
   "bugs": {
-    "url": "https://github.com/brunosps/usecase.ts/issues"
+    "url": "https://github.com/brunosps/usecase_ts/issues"
   },
-  "homepage": "https://github.com/brunosps/usecase.ts#readme",
+  "homepage": "https://github.com/brunosps/usecase_ts#readme",
   "devDependencies": {
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
