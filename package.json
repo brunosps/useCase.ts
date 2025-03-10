@@ -1,6 +1,6 @@
 {
   "name": "usecase.ts",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Uma implementação do padrão Result para TypeScript",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -17,9 +17,11 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "prepare": "husky install && npm run build",
-    "prepublishOnly": "npm run lint && npm run format && npm test",
+    "prepublishOnly": "npm run lint && npm run format && npm test && npm run build",
     "preversion": "npm run lint",
     "version": "npm run format && git add -A src",
+    "docs": "typedoc --out docs src/index.ts",
+    "release": "semantic-release",
     "postversion": "git push && git push --tags"
   },
   "husky": {
@@ -52,6 +54,10 @@
   },
   "homepage": "https://github.com/brunosps/usecase.ts#readme",
   "devDependencies": {
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^11.0.1",
+    "@semantic-release/npm": "^12.0.1",
     "@types/jest": "^29.5.14",
     "@types/node": "^20.0.0",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
@@ -65,7 +71,9 @@
     "lint-staged": "^15.0.0",
     "prettier": "^3.0.0",
     "rimraf": "^5.0.0",
+    "semantic-release": "^24.2.3",
     "ts-jest": "^29.2.6",
+    "typedoc": "^0.27.9",
     "typescript": "^5.0.0"
   }
 }
