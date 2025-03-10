@@ -3,11 +3,6 @@ name: Publish Package
 on:
   release:
     types: [created]  
-  workflow_dispatch:
-    inputs:
-      version:
-        description: 'Version to publish (e.g., 1.0.0)'
-        required: true
 
 jobs:
   build-and-publish:
@@ -31,11 +26,7 @@ jobs:
         
       - name: Build
         run: npm run build
-        
-      - name: Set version (if manual)
-        if: github.event_name == 'workflow_dispatch'
-        run: npm version ${{ github.event.inputs.version }} --no-git-tag-version
-        
+                
       - name: Publish to npm
         run: npm publish
         env:
