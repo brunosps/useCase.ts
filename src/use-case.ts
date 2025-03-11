@@ -15,7 +15,7 @@ export class BaseUseCase<I, O> implements IUseCase<I, O> {
 
   /**
    * Executes the use case and returns a ResultPromise for chainable operations.
-   * 
+   *
    * @param params Input parameters for the use case
    * @returns ResultPromise<O>
    */
@@ -61,7 +61,7 @@ export abstract class UseCase<I, O> extends BaseUseCase<I, O> {
   /**
    * Static method to create an instance of the use case and call it.
    * Returns a ResultPromise for chainable operations.
-   * 
+   *
    * @param params Input parameters for the use case
    * @returns ResultPromise<Y>
    */
