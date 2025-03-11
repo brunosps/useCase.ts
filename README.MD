@@ -1,27 +1,27 @@
-# UseCase_ts (Inspired by [u-case](https://github.com/serradura/u-case))
-
-Uma implementação robusta do padrão Result para TypeScript, projetada para gerenciar fluxos de erro de forma elegante e previsível.
-
 [![CI](https://github.com/brunosps/usecase_ts/actions/workflows/ci.yml/badge.svg)](https://github.com/brunosps/usecase_ts/actions/workflows/ci.yml)
 [![npm version](https://badge.fury.io/js/usecase_ts.svg)](https://badge.fury.io/js/usecase_ts)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## Instalação
+# usecase_ts (Inspired by [u-case](https://github.com/serradura/u-case))
+
+A robust implementation of the Result pattern for TypeScript, designed to manage error flows in an elegant and predictable way.
+
+## Installation
 
 ```bash
 npm install usecase_ts
 ```
 
-## Uso Básico
+## Basic Usage
 
 ```typescript
 import { Result, Success, Failure, UseCase } from 'usecase_ts';
 
-// Exemplo de caso de uso
+// Example use case
 class GetUserUseCase extends UseCase<{ id: string }, { name: string, email: string }> {
   async execute(input?: { id: string }): Promise<Result<{ name: string, email: string }>> {
     try {
-      // Lógica para buscar usuário
+      // Logic to fetch user
       return Success({ name: 'John Doe', email: 'john@example.com' });
     } catch (error) {
       return Failure(error instanceof Error ? error : new Error('Unknown error'));
@@ -29,41 +29,41 @@ class GetUserUseCase extends UseCase<{ id: string }, { name: string, email: stri
   }
 }
 
-// Uso
+// Usage
 async function main() {
   const result = await GetUserUseCase.call({ id: '123' });
   
   result
     .onSuccess((data) => {
-      console.log('Usuário:', data);
+      console.log('User:', data);
     })
     .onFailure((error) => {
-      console.error('Erro:', error.message);
+      console.error('Error:', error.message);
     });
 }
 ```
 
-## Encadeamento de Casos de Uso
+## Chaining Use Cases
 
 ```typescript
-// Exemplo com encadeamento usando and_then
+// Example with chaining using and_then
 const result = await firstUseCase.call(input)
   .and_then(async (data) => {
-    // Processa os dados do primeiro caso de uso
+    // Process data from the first use case
     return secondUseCase.call({ someParam: data.id });
   })
   .and_then(async (moreData) => {
-    // Processa os dados do segundo caso de uso
+    // Process data from the second use case
     return thirdUseCase.call({ anotherParam: moreData.value });
   });
 
-// Verificação do resultado final
+// Check the final result
 result
   .onSuccess((finalData) => {
-    console.log('Processo completo:', finalData);
+    console.log('Process complete:', finalData);
   })
   .onFailure((error) => {
-    console.error('Falha no processo:', error.message);
+    console.error('Process failed:', error.message);
   });
 ```
 
@@ -71,29 +71,29 @@ result
 
 ### Result<T>
 
-A classe principal que representa o resultado de uma operação.
+The main class that represents the result of an operation.
 
-#### Métodos
+#### Methods
 
-- \`getValue()\`: Retorna os dados do resultado.
-- \`isSuccess()\`: Verifica se o resultado foi bem-sucedido.
-- \`isFailure()\`: Verifica se o resultado falhou.
-- \`getError()\`: Retorna o erro, se houver.
-- \`and_then<U>(fn)\`: Executa a próxima função apenas se o resultado atual for bem-sucedido.
-- \`onSuccess(fn)\`: Executa uma função se o resultado for bem-sucedido.
-- \`onFailure(fn, failureType)\`: Executa uma função se o resultado falhar.
+- \`getValue()\`: Returns the result data.
+- \`isSuccess()\`: Checks if the result was successful.
+- \`isFailure()\`: Checks if the result failed.
+- \`getError()\`: Returns the error, if any.
+- \`and_then<U>(fn)\`: Executes the next function only if the current result is successful.
+- \`onSuccess(fn)\`: Executes a function if the result is successful.
+- \`onFailure(fn, failureType)\`: Executes a function if the result fails.
 
 ### UseCase<I, O>
 
-Classe abstrata para implementar casos de uso.
+Abstract class for implementing use cases.
 
-#### Métodos
+#### Methods
 
-- \`execute(input)\`: Método abstrato que deve ser implementado.
-- \`call(params)\`: Executa o caso de uso e retorna um Result.
-- \`static call<X, Y>(params)\`: Método estático para executar o caso de uso.
+- \`execute(input)\`: Abstract method that must be implemented.
+- \`call(params)\`: Executes the use case and returns a Result.
+- \`static call<X, Y>(params)\`: Static method to execute the use case.
 
-## Exemplo com NestJS
+## Example with NestJS
 
 ```typescript
 import { BaseProps, ListOfRecords } from '@core';
@@ -147,8 +147,8 @@ export class QueryItems extends UseCase<
       })
     )
     .and_then(async (resultado) => {
-      // Você pode encadear mais casos de uso aqui
-      // Se qualquer um falhar, os próximos não serão executados
+      // You can chain more use cases here
+      // If any fails, the next ones won't be executed
       return this.otherUseCase.call({ 
         someParameter: resultado.records.length 
       });
@@ -166,7 +166,7 @@ export class QueryItems extends UseCase<
 }
 ```
 
-## Exemplo: Autenticação com NestJS
+## Example: Authentication with NestJS
 
 ```typescript
 import { Injectable } from '@nestjs/common';
@@ -205,25 +205,25 @@ export class LoginUseCase extends UseCase<LoginInput, LoginOutput> {
 
   async execute(input: LoginInput): Promise<Result<LoginOutput>> {
     try {
-      // Validar input
+      // Validate input
       if (!input.email || !input.password) {
         return Failure(
-          new Error('Email e senha são obrigatórios'),
+          new Error('Email and password are required'),
           'VALIDATION_ERROR'
         );
       }
 
-      // Buscar usuário
+      // Find user
       const user = await this.userRepository.findByEmail(input.email);
       
       if (!user) {
         return Failure(
-          new Error('Credenciais inválidas'),
+          new Error('Invalid credentials'),
           'AUTHENTICATION_ERROR'
         );
       }
 
-      // Verificar senha
+      // Verify password
       const isPasswordValid = await this.passwordService.compare(
         input.password,
         user.passwordHash
@@ -231,18 +231,18 @@ export class LoginUseCase extends UseCase<LoginInput, LoginOutput> {
 
       if (!isPasswordValid) {
         return Failure(
-          new Error('Credenciais inválidas'),
+          new Error('Invalid credentials'),
           'AUTHENTICATION_ERROR'
         );
       }
 
-      // Gerar tokens
+      // Generate tokens
       const payload = { sub: user.id, email: user.email, role: user.role };
       
       const accessToken = this.jwtService.sign(payload, { expiresIn: '15m' });
       const refreshToken = this.jwtService.sign(payload, { expiresIn: '7d' });
 
-      // Salvar refresh token no banco
+      // Save refresh token in database
       await this.userRepository.updateRefreshToken(user.id, refreshToken);
 
       return Success({
@@ -257,106 +257,106 @@ export class LoginUseCase extends UseCase<LoginInput, LoginOutput> {
       });
     } catch (error) {
       return Failure(
-        error instanceof Error ? error : new Error('Erro desconhecido'),
+        error instanceof Error ? error : new Error('Unknown error'),
         'UNEXPECTED_ERROR'
       );
     }
   }
 }
 
-// Exemplo de uso
+// Usage example
 async function authenticate(email: string, password: string) {
   const result = await LoginUseCase.call({ email, password });
   
   result
     .onSuccess((data) => {
-      console.log(`Usuário ${data.user.name} autenticado com sucesso`);
-      // Armazenar tokens, redirecionar, etc.
+      console.log(`User ${data.user.name} authenticated successfully`);
+      // Store tokens, redirect, etc.
     })
     .onFailure((error) => {
-      console.error('Falha na autenticação:', error.message);
+      console.error('Authentication failed:', error.message);
     }, 'AUTHENTICATION_ERROR')
     .onFailure((error) => {
-      console.error('Erro de validação:', error.message);
+      console.error('Validation error:', error.message);
     }, 'VALIDATION_ERROR')
     .onFailure((error) => {
-      console.error('Erro inesperado:', error.message);
+      console.error('Unexpected error:', error.message);
     }, 'UNEXPECTED_ERROR');
 }
 ```
 
-## Tratamento de Erros
+## Error Handling
 
 ```typescript
 import { Failure, Result, Success, UseCase } from 'usecase_ts';
 
-class ProcessarDadosUseCase extends UseCase<string, number> {
+class ProcessDataUseCase extends UseCase<string, number> {
   async execute(input?: string): Promise<Result<number>> {
     try {
       if (!input) {
-        return Failure(new Error('Input é obrigatório'));
+        return Failure(new Error('Input is required'));
       }
       
-      // Processamento que pode falhar
-      const numero = parseInt(input);
+      // Processing that might fail
+      const number = parseInt(input);
       
-      if (isNaN(numero)) {
+      if (isNaN(number)) {
         return Failure(
-          new Error('Input não é um número válido'),
+          new Error('Input is not a valid number'),
           'INVALID_NUMBER'
         );
       }
       
-      return Success(numero * 2);
+      return Success(number * 2);
     } catch (error) {
       return Failure(
-        error instanceof Error ? error : new Error('Erro desconhecido'),
+        error instanceof Error ? error : new Error('Unknown error'),
         'UNEXPECTED_ERROR'
       );
     }
   }
 }
 
-// Uso com tratamento de diferentes tipos de erro
-async function processar() {
-  const result = await ProcessarDadosUseCase.call('abc');
+// Usage with different error type handling
+async function process() {
+  const result = await ProcessDataUseCase.call('abc');
   
   result
     .onSuccess((data) => {
-      console.log('Resultado:', data);
+      console.log('Result:', data);
     })
     .onFailure((error) => {
-      console.error('Erro genérico:', error.message);
+      console.error('Generic error:', error.message);
     }, 'FAILURE')
     .onFailure((error) => {
-      console.error('Erro de número inválido:', error.message);
+      console.error('Invalid number error:', error.message);
     }, 'INVALID_NUMBER')
     .onFailure((error) => {
-      console.error('Erro inesperado:', error.message);
+      console.error('Unexpected error:', error.message);
     }, 'UNEXPECTED_ERROR');
 }
 ```
 
-## Características
+## Features
 
-- **Tipagem Forte**: Implementação totalmente tipada para garantir segurança em tempo de compilação
-- **Encadeamento Fluente**: API fluente para encadear operações com \`and_then\`
-- **Tratamento de Erros Robusto**: Manipulação elegante de erros com tipos de falha personalizáveis
-- **Compatível com NestJS**: Funciona perfeitamente com o framework NestJS
-- **Zero Dependências**: Não depende de bibliotecas externas
-- **Leve e Rápido**: Implementação eficiente com foco em desempenho
+- **Strong Typing**: Fully typed implementation to ensure compile-time safety
+- **Fluent Chaining**: Fluent API for chaining operations with \`and_then\`
+- **Robust Error Handling**: Elegant error handling with customizable failure types
+- **NestJS Compatible**: Works seamlessly with the NestJS framework
+- **Zero Dependencies**: Does not depend on external libraries
+- **Lightweight and Fast**: Efficient implementation focused on performance
 
-## Contribuindo
+## Contributing
 
-Contribuições são bem-vindas! Sinta-se à vontade para abrir issues ou enviar pull requests.
+Contributions are welcome! Feel free to open issues or submit pull requests.
 
-1. Fork o projeto
-2. Crie sua branch de feature (\`git checkout -b feature/amazing-feature\`)
-3. Commit suas mudanças (\`git commit -m 'Add some amazing feature'\`)
-4. Push para a branch (\`git push origin feature/amazing-feature\`)
-5. Abra um Pull Request
+1. Fork the project
+2. Create your feature branch (\`git checkout -b feature/amazing-feature\`)
+3. Commit your changes (\`git commit -m 'Add some amazing feature'\`)
+4. Push to the branch (\`git push origin feature/amazing-feature\`)
+5. Open a Pull Request
 
-## Licença
+## License
 
 MIT
 
